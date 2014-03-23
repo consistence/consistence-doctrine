@@ -1,0 +1,12 @@
+{
+	"name": "consistence/consistence-doctrine",
+	"description": "Integration of Consistence library with Doctrine ORM",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Vašek Purchart",
+			"email": "me@vasekpurchart.cz",
+			"homepage": "http://vasekpurchart.cz"
+		}
+	]
+}
