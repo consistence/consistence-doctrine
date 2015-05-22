@@ -11,6 +11,7 @@
 	],
 	"require": {
 		"consistence/consistence": "~0.20",
+		"doctrine/annotations": "~1.2",
 		"doctrine/orm": "~2.5.0"
 	},
 	"require-dev": {
