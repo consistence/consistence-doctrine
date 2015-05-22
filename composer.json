@@ -9,6 +9,11 @@
 			"homepage": "http://vasekpurchart.cz"
 		}
 	],
+	"require": {
+		"consistence/consistence": "~0.20",
+		"doctrine/annotations": "~1.2",
+		"doctrine/orm": "~2.5.0"
+	},
 	"require-dev": {
 		"consistence/coding-standard": "0.12",
 		"jakub-onderka/php-console-highlighter": "0.3.2",
