@@ -10,7 +10,7 @@ Usage
 
 [Enums](https://github.com/consistence/consistence/blob/master/docs/Enum/enums.md) represent predefined set of values and of course, you will want to store these values in your database as well. Since [`Enums`](https://github.com/consistence/consistence/blob/master/src/Enum/Enum.php) are objects and you only want to store the represented value, there has to be some mapping.
 
-Let's see this in the example where you want to store sex for your `User`s:
+You can see it in this example where you want to store sex for your `User`s:
 
 ```php
 <?php
@@ -81,7 +81,7 @@ class User extends \Consistence\ObjectPrototype
 }
 ```
 
-Now everything is ready to be used, when you call `flush` only `female` will be saved:
+Now everything is ready to be used, when you call `flush`, only `female` will be saved:
 
 ```php
 <?php
