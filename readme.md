@@ -126,6 +126,8 @@ This means that the objects API is symmetrical (you get the same type as you set
 Installation
 ------------
 
+> If you are using Symfony, you can use [`consistence/consistence-doctrine-symfony`](https://github.com/consistence/consistence-doctrine-symfony), which will take care of the integration.
+
 1) Install package [`consistence/consistence-doctrine`](https://packagist.org/packages/consistence/consistence-doctrine) with [Composer](https://getcomposer.org/):
 
 ```bash
