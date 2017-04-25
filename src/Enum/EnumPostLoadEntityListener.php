@@ -110,7 +110,7 @@ class EnumPostLoadEntityListener
 			return [
 				$object,
 				$metadata->getReflectionClass(),
-				$fieldName
+				$fieldName,
 			];
 		}
 
