@@ -5,12 +5,10 @@ declare(strict_types = 1);
 namespace Consistence\Doctrine\Enum;
 
 use Consistence\Enum\Enum;
-
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
-
 use ReflectionClass;
 use ReflectionProperty;
 

@@ -6,7 +6,7 @@ namespace Consistence\Doctrine\Enum;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 
-class UnsupportedClassMetadataException extends \Consistence\PhpException implements \Consistence\Doctrine\Enum\Exception
+class UnsupportedClassMetadataException extends \Consistence\PhpException
 {
 
 	/** @var string */

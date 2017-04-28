@@ -9,7 +9,6 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
-
 use ReflectionClass;
 
 class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase

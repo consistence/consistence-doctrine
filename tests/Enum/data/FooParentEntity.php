@@ -15,7 +15,7 @@ class FooParentEntity
 	/**
 	 * @ORM\Id()
 	 * @ORM\Column(type="integer")
-	 * @var integer
+	 * @var int
 	 */
 	private $id;
 

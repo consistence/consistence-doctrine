@@ -17,9 +17,9 @@ class IntegerEnumType extends \Doctrine\DBAL\Types\IntegerType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|integer|null $value
+	 * @param \Consistence\Enum\Enum|int|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
-	 * @return integer|null
+	 * @return int|null
 	 */
 	public function convertToDatabaseValue($value, AbstractPlatform $platform)
 	{

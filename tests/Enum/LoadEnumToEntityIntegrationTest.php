@@ -96,7 +96,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		];
 		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/data'], true, null, null, false);
 		$entityManager = EntityManager::create($connectionParameters, $config);
-		/** @var $annotationDriver \Doctrine\ORM\Mapping\Driver\AnnotationDriver */
+		/** @var \Doctrine\ORM\Mapping\Driver\AnnotationDriver $annotationDriver */
 		$annotationDriver = $entityManager->getConfiguration()->getMetadataDriverImpl();
 
 		$postLoadListener = new EnumPostLoadEntityListener($annotationDriver->getReader());
