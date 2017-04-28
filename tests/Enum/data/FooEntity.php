@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
@@ -44,10 +46,7 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 		$this->embedded = new FooEmbeddable();
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEnum
-	 */
-	public function getEnum()
+	public function getEnum(): FooEnum
 	{
 		return $this->enum;
 	}
@@ -60,18 +59,12 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 		return $this->nullableEnum;
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEnum
-	 */
-	public function getWithoutNamespace()
+	public function getWithoutNamespace(): FooEnum
 	{
 		return $this->withoutNamespace;
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEmbeddable
-	 */
-	public function getEmbedded()
+	public function getEmbedded(): FooEmbeddable
 	{
 		return $this->embedded;
 	}

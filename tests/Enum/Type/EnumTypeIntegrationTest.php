@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum\Type;
 
 use Consistence\Enum\Enum;
@@ -13,7 +15,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return mixed[][]
 	 */
-	public function convertEnumToDatabaseProvider()
+	public function convertEnumToDatabaseProvider(): array
 	{
 		return [
 			[DoctrineType::getType(IntegerEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
@@ -38,7 +40,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return \Doctrine\DBAL\Types\Type[][]
 	 */
-	public function enumTypesProvider()
+	public function enumTypesProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME)],
@@ -61,7 +63,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return mixed[][]
 	 */
-	public function convertScalarValueToDatabaseProvider()
+	public function convertScalarValueToDatabaseProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE],
@@ -85,7 +87,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return string[][]
 	 */
-	public function enumTypeClassesProvider()
+	public function enumTypeClassesProvider(): array
 	{
 		return [
 			[FloatEnumType::class],
@@ -99,7 +101,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @param string $typeClass
 	 */
-	public function testGetName($typeClass)
+	public function testGetName(string $typeClass)
 	{
 		$this->assertSame($typeClass::NAME, DoctrineType::getType($typeClass::NAME)->getName());
 	}

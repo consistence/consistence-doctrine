@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
@@ -19,10 +21,7 @@ class BarEmbeddable
 	 */
 	private $enum = FooEnum::ONE;
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEnum
-	 */
-	public function getEnum()
+	public function getEnum(): FooEnum
 	{
 		return $this->enum;
 	}

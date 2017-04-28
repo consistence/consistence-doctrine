@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
@@ -30,18 +32,12 @@ class FooEmbeddable
 		$this->embedded = new BarEmbeddable();
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEnum
-	 */
-	public function getEnum()
+	public function getEnum(): FooEnum
 	{
 		return $this->enum;
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\BarEmbeddable
-	 */
-	public function getEmbedded()
+	public function getEmbedded(): BarEmbeddable
 	{
 		return $this->embedded;
 	}

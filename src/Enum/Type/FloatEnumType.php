@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -9,10 +11,7 @@ class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 
 	const NAME = 'float_enum';
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+	public function getName(): string
 	{
 		return self::NAME;
 	}
@@ -27,11 +26,7 @@ class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 		return EnumType::convertToDatabaseValue($value);
 	}
 
-	/**
-	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
-	 * @return boolean
-	 */
-	public function requiresSQLCommentHint(AbstractPlatform $platform)
+	public function requiresSQLCommentHint(AbstractPlatform $platform): bool
 	{
 		return true;
 	}

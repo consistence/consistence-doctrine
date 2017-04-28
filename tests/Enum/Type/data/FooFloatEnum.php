@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum\Type;
 
 class FooFloatEnum extends \Consistence\Enum\Enum

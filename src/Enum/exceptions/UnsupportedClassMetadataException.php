@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -10,11 +12,7 @@ class UnsupportedClassMetadataException extends \Consistence\PhpException implem
 	/** @var string */
 	private $givenClassMetadataClass;
 
-	/**
-	 * @param string $givenClassMetadataClass
-	 * @param \Exception|null $previous
-	 */
-	public function __construct($givenClassMetadataClass, \Exception $previous = null)
+	public function __construct(string $givenClassMetadataClass, \Throwable $previous = null)
 	{
 		parent::__construct(sprintf(
 			'Instance of %s expected, %s given',
@@ -24,10 +22,7 @@ class UnsupportedClassMetadataException extends \Consistence\PhpException implem
 		$this->givenClassMetadataClass = $givenClassMetadataClass;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getGivenClassMetadataClass()
+	public function getGivenClassMetadataClass(): string
 	{
 		return $this->givenClassMetadataClass;
 	}

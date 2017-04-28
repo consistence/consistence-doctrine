@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Consistence\Doctrine\Enum;
 
 use Consistence\Enum\Enum;
@@ -10,6 +12,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 use ReflectionClass;
+use ReflectionProperty;
 
 class EnumPostLoadEntityListener
 {
@@ -42,7 +45,7 @@ class EnumPostLoadEntityListener
 	private function processField(
 		EntityManager $entityManager,
 		$entity,
-		$fieldName
+		string $fieldName
 	)
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($entity));
@@ -73,12 +76,10 @@ class EnumPostLoadEntityListener
 		}
 	}
 
-	/**
-	 * @param \ReflectionClass $classReflection
-	 * @param string $propertyName
-	 * @return \ReflectionProperty
-	 */
-	private function getProperty(ReflectionClass $classReflection, $propertyName)
+	private function getProperty(
+		ReflectionClass $classReflection,
+		string $propertyName
+	): ReflectionProperty
 	{
 		try {
 			return $classReflection->getProperty($propertyName);
@@ -100,8 +101,8 @@ class EnumPostLoadEntityListener
 	private function resolveObjectAndProperty(
 		EntityManager $entityManager,
 		$object,
-		$fieldName
-	)
+		string $fieldName
+	): array
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($object));
 
@@ -125,12 +126,10 @@ class EnumPostLoadEntityListener
 		);
 	}
 
-	/**
-	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param string $class
-	 * @return \Doctrine\ORM\Mapping\ClassMetadata
-	 */
-	private function getClassMetadata(EntityManager $entityManager, $class)
+	private function getClassMetadata(
+		EntityManager $entityManager,
+		string $class
+	): ClassMetadata
 	{
 		$metadata = $entityManager->getClassMetadata($class);
 		if (!($metadata instanceof ClassMetadata)) {
