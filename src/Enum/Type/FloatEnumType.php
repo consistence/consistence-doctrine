@@ -4,7 +4,7 @@ namespace Consistence\Doctrine\Enum\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class FloatEnumType extends \Doctrine\DBAL\Types\IntegerType
+class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 {
 
 	const NAME = 'float_enum';
@@ -18,9 +18,9 @@ class FloatEnumType extends \Doctrine\DBAL\Types\IntegerType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|integer|null $value
+	 * @param \Consistence\Enum\Enum|float|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
-	 * @return integer|null
+	 * @return float|null
 	 */
 	public function convertToDatabaseValue($value, AbstractPlatform $platform)
 	{
