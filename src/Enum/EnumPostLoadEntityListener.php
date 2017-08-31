@@ -48,11 +48,16 @@ class EnumPostLoadEntityListener
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($entity));
 
-		list($object, $classReflection, $propertyName) = $this->resolveObjectAndProperty(
-			$entityManager,
-			$entity,
-			$fieldName
-		);
+		try {
+			list($object, $classReflection, $propertyName) = $this->resolveObjectAndProperty(
+				$entityManager,
+				$entity,
+				$fieldName
+			);
+		} catch (\Consistence\Doctrine\Enum\EmbeddableIsNullException $e) {
+			return;
+		}
+
 		$property = $this->getProperty($classReflection, $propertyName);
 		$annotation = $this->annotationReader->getPropertyAnnotation($property, EnumAnnotation::class);
 		if ($annotation !== null) {
@@ -102,6 +107,10 @@ class EnumPostLoadEntityListener
 		string $fieldName
 	): array
 	{
+		if ($object === null) {
+			throw new \Consistence\Doctrine\Enum\EmbeddableIsNullException();
+		}
+
 		$metadata = $this->getClassMetadata($entityManager, get_class($object));
 
 		$parts = explode(self::EMBEDDED_SEPARATOR, $fieldName);
