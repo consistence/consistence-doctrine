@@ -86,6 +86,20 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		}
 	}
 
+	public function testLoadMultipleInstancesOfOneEntity()
+	{
+		$foo = new FooEntity();
+		$iAmFooToo = new FooEntity();
+
+		list($postLoadListener, $entityManager) = $this->getPostLoadListener();
+
+		$postLoadListener->postLoad(new LifecycleEventArgs($foo, $entityManager));
+		$postLoadListener->postLoad(new LifecycleEventArgs($iAmFooToo, $entityManager));
+
+		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		$this->assertSame(FooEnum::get(FooEnum::ONE), $iAmFooToo->getEnum());
+	}
+
 	/**
 	 * @param object $entity
 	 */

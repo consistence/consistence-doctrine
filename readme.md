@@ -171,7 +171,7 @@ You need to register [`EnumPostLoadEntityListener`](/src/Enum/EnumPostLoadEntity
 <?php
 
 use Consistence\Doctrine\Enum\EnumPostLoadEntityListener;
-
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Events;
 
 /** @var \Doctrine\ORM\EntityManager $entityManager */
@@ -179,9 +179,12 @@ use Doctrine\ORM\Events;
 $annotationDriver = $entityManager->getConfiguration()->getMetadataDriverImpl();
 $annotationReader = $annotationDriver->getReader();
 
+// make sure to use the most appropriate cache for given environment to get the best performance
+$cache = new ArrayCache();
+
 $entityManager->getEventManager()->addEventListener(
 	Events::postLoad,
-	new EnumPostLoadEntityListener($annotationReader)
+	new EnumPostLoadEntityListener($annotationReader, $cache)
 );
 ```
 
