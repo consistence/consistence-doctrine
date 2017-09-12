@@ -91,6 +91,14 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	private function callPostLoadEventOnEntity($entity)
 	{
+		list($postLoadListener, $entityManager) = $this->getPostLoadListener();
+
+		$loadEvent = new LifecycleEventArgs($entity, $entityManager);
+		$postLoadListener->postLoad($loadEvent);
+	}
+
+	private function getPostLoadListener(): array
+	{
 		$connectionParameters = [
 			'driver' => 'pdo_mysql',
 		];
@@ -99,10 +107,10 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		/** @var \Doctrine\ORM\Mapping\Driver\AnnotationDriver $annotationDriver */
 		$annotationDriver = $entityManager->getConfiguration()->getMetadataDriverImpl();
 
-		$postLoadListener = new EnumPostLoadEntityListener($annotationDriver->getReader());
-
-		$loadEvent = new LifecycleEventArgs($entity, $entityManager);
-		$postLoadListener->postLoad($loadEvent);
+		return [
+			new EnumPostLoadEntityListener($annotationDriver->getReader()),
+			$entityManager,
+		];
 	}
 
 }
