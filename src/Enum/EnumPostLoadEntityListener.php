@@ -9,13 +9,9 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use ReflectionClass;
-use ReflectionProperty;
 
 class EnumPostLoadEntityListener
 {
-
-	const EMBEDDED_SEPARATOR = '.';
 
 	/** @var \Doctrine\Common\Annotations\Reader */
 	private $annotationReader;
@@ -48,23 +44,17 @@ class EnumPostLoadEntityListener
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($entity));
 
-		list($object, $classReflection, $propertyName) = $this->resolveObjectAndProperty(
-			$entityManager,
-			$entity,
-			$fieldName
-		);
-		$property = $this->getProperty($classReflection, $propertyName);
-		$annotation = $this->annotationReader->getPropertyAnnotation($property, EnumAnnotation::class);
+		$annotation = $this->annotationReader->getPropertyAnnotation($metadata->getReflectionProperty($fieldName), EnumAnnotation::class);
+
 		if ($annotation !== null) {
-			$property->setAccessible(true);
-			$scalarValue = $property->getValue($object);
+			$scalarValue = $metadata->getFieldValue($entity, $fieldName);
 			if (is_scalar($scalarValue)) {
 				$enumClass = $metadata->fullyQualifiedClassName($annotation->class);
 				if (!is_a($enumClass, Enum::class, true)) {
 					throw new \Consistence\Doctrine\Enum\NotEnumException($enumClass);
 				}
 				$enum = $enumClass::get($scalarValue);
-				$property->setValue($object, $enum);
+				$metadata->setFieldValue($entity, $fieldName, $enum);
 				$entityManager->getUnitOfWork()->setOriginalEntityProperty(
 					spl_object_hash($entity),
 					$fieldName,
@@ -72,56 +62,6 @@ class EnumPostLoadEntityListener
 				);
 			}
 		}
-	}
-
-	private function getProperty(
-		ReflectionClass $classReflection,
-		string $propertyName
-	): ReflectionProperty
-	{
-		try {
-			return $classReflection->getProperty($propertyName);
-		} catch (\ReflectionException $e) {
-			$parentClass = $classReflection->getParentClass();
-			if ($parentClass === false) {
-				throw $e;
-			}
-			return $this->getProperty($parentClass, $propertyName);
-		}
-	}
-
-	/**
-	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param object $object
-	 * @param string $fieldName
-	 * @return mixed[]
-	 */
-	private function resolveObjectAndProperty(
-		EntityManager $entityManager,
-		$object,
-		string $fieldName
-	): array
-	{
-		$metadata = $this->getClassMetadata($entityManager, get_class($object));
-
-		$parts = explode(self::EMBEDDED_SEPARATOR, $fieldName);
-		if (count($parts) === 1) {
-			return [
-				$object,
-				$metadata->getReflectionClass(),
-				$fieldName,
-			];
-		}
-
-		$propertyName = array_shift($parts);
-		$property = $metadata->getReflectionClass()->getProperty($propertyName);
-		$property->setAccessible(true);
-
-		return $this->resolveObjectAndProperty(
-			$entityManager,
-			$property->getValue($object),
-			implode(self::EMBEDDED_SEPARATOR, $parts)
-		);
 	}
 
 	private function getClassMetadata(
