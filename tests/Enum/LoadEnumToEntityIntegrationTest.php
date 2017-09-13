@@ -60,6 +60,14 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEmbedded()->getEnum());
 	}
 
+	public function testLoadEnumInNotLoadedEmbeddable()
+	{
+		$foo = new FooEntity();
+		$this->callPostLoadEventOnEntity($foo);
+
+		$this->assertNull($foo->getNotLoadedEmbedded());
+	}
+
 	public function testLoadEnumMissingEnumClass()
 	{
 		$this->expectException(\Doctrine\Common\Annotations\AnnotationException::class);

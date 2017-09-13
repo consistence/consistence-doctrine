@@ -40,6 +40,14 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 	 */
 	private $embedded;
 
+	/**
+	 * This simulates for example using partials where this was not selected
+	 *
+	 * @ORM\Embedded(class=FooEmbeddable::class, columnPrefix="not_loaded_")
+	 * @var \Consistence\Doctrine\Enum\FooEmbeddable
+	 */
+	private $notLoadedEmbedded;
+
 	public function __construct()
 	{
 		$this->embedded = new FooEmbeddable();
@@ -66,6 +74,14 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 	public function getEmbedded(): FooEmbeddable
 	{
 		return $this->embedded;
+	}
+
+	/**
+	 * @return \Consistence\Doctrine\Enum\FooEmbeddable
+	 */
+	public function getNotLoadedEmbedded()
+	{
+		return $this->notLoadedEmbedded;
 	}
 
 }
