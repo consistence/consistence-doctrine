@@ -7,6 +7,7 @@ namespace Consistence\Doctrine\Enum;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Tools\Setup;
+use ReflectionProperty;
 
 class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 {
@@ -84,6 +85,18 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
 			$this->assertSame(FooEntity::class, $e->getEnumClass());
 		}
+	}
+
+	public function testLoadEnumInNullEmbeddable()
+	{
+		$foo = new FooEntity();
+		$property = new ReflectionProperty(FooEntity::class, 'embedded');
+		$property->setAccessible(true);
+		$property->setValue($foo, null);
+
+		$this->callPostLoadEventOnEntity($foo);
+
+		$this->assertNull($property->getValue($foo));
 	}
 
 	/**
