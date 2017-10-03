@@ -20,6 +20,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 			[DoctrineType::getType(IntegerEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
 			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE],
 			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE],
+			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED],
 		];
 	}
 
@@ -45,6 +46,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 			[DoctrineType::getType(FloatEnumType::NAME)],
 			[DoctrineType::getType(IntegerEnumType::NAME)],
 			[DoctrineType::getType(StringEnumType::NAME)],
+			[DoctrineType::getType(BooleanEnumType::NAME)],
 		];
 	}
 
@@ -68,6 +70,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE],
 			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::ONE],
 			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::ONE],
+			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::ENABLED],
 		];
 	}
 
@@ -92,6 +95,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 			[FloatEnumType::class],
 			[IntegerEnumType::class],
 			[StringEnumType::class],
+			[BooleanEnumType::class],
 		];
 	}
 

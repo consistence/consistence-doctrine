@@ -32,7 +32,7 @@ Now you can use the `Sex` enum in your `User` entity. There are two important th
 
 You can specify any other parameters for `ORM\Column` as you would usually (nullability, length...).
 
-There is also `integer_enum` and `float_enum` which can be used respectively for their types.
+There is also `integer_enum`, `float_enum` and `boolean_enum` which can be used respectively for their types.
 
 2) `@Enum(class=Sex::class)` - this will be used for reconstructing the `Sex`
  enum object when loading the value back from database
@@ -139,6 +139,7 @@ composer require consistence/consistence-doctrine
 ```php
 <?php
 
+use Consistence\Doctrine\Enum\Type\BooleanEnumType;
 use Consistence\Doctrine\Enum\Type\FloatEnumType;
 use Consistence\Doctrine\Enum\Type\IntegerEnumType;
 use Consistence\Doctrine\Enum\Type\StringEnumType;
@@ -154,6 +155,7 @@ $loader = require __DIR__ . '/../vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 // register Doctrine DBAL types
+DoctrineType::addType(BooleanEnumType::NAME, BooleanEnumType::class); // boolean_enum
 DoctrineType::addType(FloatEnumType::NAME, FloatEnumType::class); // float_enum
 DoctrineType::addType(IntegerEnumType::NAME, IntegerEnumType::class); // integer_enum
 DoctrineType::addType(StringEnumType::NAME, StringEnumType::class); // string_enum
