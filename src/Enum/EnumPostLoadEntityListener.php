@@ -34,22 +34,29 @@ class EnumPostLoadEntityListener
 	{
 		$entity = $event->getEntity();
 		$entityManager = $event->getEntityManager();
-		foreach ($this->getEnumFields($entityManager, $entity) as $fieldName => $enumClassName) {
+		foreach ($this->getEnumFields($entityManager, get_class($entity)) as $fieldName => $enumClassName) {
 			$this->processField($entityManager, $entity, $fieldName, $enumClassName);
 		}
 	}
 
+	public function warmUpCache(
+		EntityManager $entityManager,
+		string $className
+	)
+	{
+		$this->getEnumFields($entityManager, $className);
+	}
+
 	/**
 	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param object $entity
+	 * @param string $className
 	 * @return string[] format: enum field name (string) => enum class name for field (string)
 	 */
 	private function getEnumFields(
 		EntityManager $entityManager,
-		$entity
+		string $className
 	): array
 	{
-		$className = get_class($entity);
 		$enumFields = $this->enumFieldsCache->fetch($className);
 		if ($enumFields !== false) {
 			return $enumFields;
