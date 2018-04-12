@@ -97,12 +97,13 @@ class EnumPostLoadEntityListener
 	)
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($entity));
-		$scalarValue = $metadata->getFieldValue($entity, $fieldName);
-		if (!is_scalar($scalarValue)) {
-			return;
+		$enumValue = $metadata->getFieldValue($entity, $fieldName);
+
+		if ($enumValue === null) {
+			return null;
 		}
 
-		$enum = $enumClassName::get($scalarValue);
+		$enum = $enumClassName::get(($enumValue instanceof Enum) ? $enumValue->getValue() : $enumValue);
 		$metadata->setFieldValue($entity, $fieldName, $enum);
 		$entityManager->getUnitOfWork()->setOriginalEntityProperty(
 			spl_object_hash($entity),

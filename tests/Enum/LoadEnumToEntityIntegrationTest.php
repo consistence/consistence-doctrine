@@ -27,6 +27,18 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($foo->getNullableEnum());
 	}
 
+	public function testLoadEnumToUnserializedEntity()
+	{
+		$fooBeforeSerialization = new FooEntity();
+		$fooBeforeSerialization->setEnum(FooEnum::get(FooEnum::ONE));
+
+		$foo = unserialize(serialize($fooBeforeSerialization));
+		$this->callPostLoadEventOnEntity($foo);
+
+		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		$this->assertNull($foo->getNullableEnum());
+	}
+
 	public function testMultipleLoadEvents()
 	{
 		$foo = new FooEntity();

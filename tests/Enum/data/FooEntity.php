@@ -53,6 +53,11 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 		$this->embedded = new FooEmbeddable();
 	}
 
+	public function setEnum(FooEnum $enum)
+	{
+		$this->enum = $enum;
+	}
+
 	public function getEnum(): FooEnum
 	{
 		return $this->enum;
