@@ -83,15 +83,9 @@ class EnumPostLoadEntityListener
 		return $enumFields;
 	}
 
-	/**
-	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param object $entity
-	 * @param string $fieldName
-	 * @param string $enumClassName
-	 */
 	private function processField(
 		EntityManager $entityManager,
-		$entity,
+		object $entity,
 		string $fieldName,
 		string $enumClassName
 	): void

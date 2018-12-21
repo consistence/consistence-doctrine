@@ -120,10 +120,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $iAmFooToo->getEnum());
 	}
 
-	/**
-	 * @param object $entity
-	 */
-	private function callPostLoadEventOnEntity($entity): void
+	private function callPostLoadEventOnEntity(object $entity): void
 	{
 		[$postLoadListener, $entityManager] = $this->getPostLoadListener();
 
