@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 {
 
-	public function testLoadWrongClassMetadata()
+	public function testLoadWrongClassMetadata(): void
 	{
 		$reader = $this->createMock(Reader::class);
 
@@ -37,7 +37,7 @@ class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 		}
 	}
 
-	public function testWarmupCache()
+	public function testWarmupCache(): void
 	{
 		$reader = $this->createMock(Reader::class);
 		$cache = new ArrayCache();

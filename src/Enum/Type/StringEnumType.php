@@ -9,7 +9,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 class StringEnumType extends \Doctrine\DBAL\Types\StringType
 {
 
-	const NAME = 'string_enum';
+	public const NAME = 'string_enum';
 
 	public function getName(): string
 	{
@@ -21,7 +21,7 @@ class StringEnumType extends \Doctrine\DBAL\Types\StringType
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return string|null
 	 */
-	public function convertToDatabaseValue($value, AbstractPlatform $platform)
+	public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
 	{
 		return EnumType::convertToDatabaseValue($value);
 	}

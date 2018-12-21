@@ -11,7 +11,7 @@ use Doctrine\ORM\Tools\Setup;
 class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 {
 
-	public function testLoadEnumToEntity()
+	public function testLoadEnumToEntity(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -19,7 +19,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
 	}
 
-	public function testLoadNullEnumToEntity()
+	public function testLoadNullEnumToEntity(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -27,7 +27,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($foo->getNullableEnum());
 	}
 
-	public function testLoadEnumToUnserializedEntity()
+	public function testLoadEnumToUnserializedEntity(): void
 	{
 		$fooBeforeSerialization = new FooEntity();
 		$fooBeforeSerialization->setEnum(FooEnum::get(FooEnum::ONE));
@@ -39,7 +39,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($foo->getNullableEnum());
 	}
 
-	public function testMultipleLoadEvents()
+	public function testMultipleLoadEvents(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -48,7 +48,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
 	}
 
-	public function testLoadEnumClassWithoutNamespace()
+	public function testLoadEnumClassWithoutNamespace(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -56,7 +56,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getWithoutNamespace());
 	}
 
-	public function testLoadEnumInEmbeddable()
+	public function testLoadEnumInEmbeddable(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -64,7 +64,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEnum());
 	}
 
-	public function testLoadEnumInEmbeddableWeNeedToGoDeeper()
+	public function testLoadEnumInEmbeddableWeNeedToGoDeeper(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -72,7 +72,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEmbedded()->getEnum());
 	}
 
-	public function testLoadEnumInNotLoadedEmbeddable()
+	public function testLoadEnumInNotLoadedEmbeddable(): void
 	{
 		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
@@ -80,7 +80,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($foo->getNotLoadedEmbedded());
 	}
 
-	public function testLoadEnumMissingEnumClass()
+	public function testLoadEnumMissingEnumClass(): void
 	{
 		$this->expectException(\Doctrine\Common\Annotations\AnnotationException::class);
 		$this->expectExceptionMessage('missingEnumClass');
@@ -88,7 +88,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->callPostLoadEventOnEntity(new BarEntity());
 	}
 
-	public function testLoadEnumNonExistingEnumClass()
+	public function testLoadEnumNonExistingEnumClass(): void
 	{
 		try {
 			$this->callPostLoadEventOnEntity(new BazEntity());
@@ -97,7 +97,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		}
 	}
 
-	public function testLoadEnumNotEnumClass()
+	public function testLoadEnumNotEnumClass(): void
 	{
 		try {
 			$this->callPostLoadEventOnEntity(new BaxEntity());
@@ -106,12 +106,12 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		}
 	}
 
-	public function testLoadMultipleInstancesOfOneEntity()
+	public function testLoadMultipleInstancesOfOneEntity(): void
 	{
 		$foo = new FooEntity();
 		$iAmFooToo = new FooEntity();
 
-		list($postLoadListener, $entityManager) = $this->getPostLoadListener();
+		[$postLoadListener, $entityManager] = $this->getPostLoadListener();
 
 		$postLoadListener->postLoad(new LifecycleEventArgs($foo, $entityManager));
 		$postLoadListener->postLoad(new LifecycleEventArgs($iAmFooToo, $entityManager));
@@ -123,9 +123,9 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @param object $entity
 	 */
-	private function callPostLoadEventOnEntity($entity)
+	private function callPostLoadEventOnEntity($entity): void
 	{
-		list($postLoadListener, $entityManager) = $this->getPostLoadListener();
+		[$postLoadListener, $entityManager] = $this->getPostLoadListener();
 
 		$loadEvent = new LifecycleEventArgs($entity, $entityManager);
 		$postLoadListener->postLoad($loadEvent);

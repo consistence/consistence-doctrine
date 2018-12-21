@@ -9,7 +9,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 {
 
-	const NAME = 'float_enum';
+	public const NAME = 'float_enum';
 
 	public function getName(): string
 	{
@@ -21,7 +21,7 @@ class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return float|null
 	 */
-	public function convertToDatabaseValue($value, AbstractPlatform $platform)
+	public function convertToDatabaseValue($value, AbstractPlatform $platform): ?float
 	{
 		return EnumType::convertToDatabaseValue($value);
 	}

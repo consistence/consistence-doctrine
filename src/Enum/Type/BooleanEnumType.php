@@ -9,7 +9,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 class BooleanEnumType extends \Doctrine\DBAL\Types\BooleanType
 {
 
-	const NAME = 'boolean_enum';
+	public const NAME = 'boolean_enum';
 
 	public function getName(): string
 	{
@@ -21,7 +21,7 @@ class BooleanEnumType extends \Doctrine\DBAL\Types\BooleanType
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return bool|null
 	 */
-	public function convertToDatabaseValue($value, AbstractPlatform $platform)
+	public function convertToDatabaseValue($value, AbstractPlatform $platform): ?bool
 	{
 		return EnumType::convertToDatabaseValue($value);
 	}

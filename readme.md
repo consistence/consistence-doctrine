@@ -20,8 +20,8 @@ namespace Consistence\Doctrine\Example\User;
 class Sex extends \Consistence\Enum\Enum
 {
 
-	const FEMALE = 'female';
-	const MALE = 'male';
+	public const FEMALE = 'female';
+	public const MALE = 'male';
 
 }
 ```

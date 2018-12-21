@@ -12,7 +12,7 @@ class UnsupportedClassMetadataException extends \Consistence\PhpException
 	/** @var string */
 	private $givenClassMetadataClass;
 
-	public function __construct(string $givenClassMetadataClass, \Throwable $previous = null)
+	public function __construct(string $givenClassMetadataClass, ?\Throwable $previous = null)
 	{
 		parent::__construct(sprintf(
 			'Instance of %s expected, %s given',

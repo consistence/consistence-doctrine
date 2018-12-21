@@ -10,7 +10,7 @@ class NotEnumException extends \Consistence\PhpException
 	/** @var string */
 	private $class;
 
-	public function __construct(string $enumClass, \Throwable $previous = null)
+	public function __construct(string $enumClass, ?\Throwable $previous = null)
 	{
 		parent::__construct(sprintf('Class %s is not an Enum', $enumClass), $previous);
 		$this->class = $enumClass;

@@ -53,7 +53,7 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 		$this->embedded = new FooEmbeddable();
 	}
 
-	public function setEnum(FooEnum $enum)
+	public function setEnum(FooEnum $enum): void
 	{
 		$this->enum = $enum;
 	}
@@ -63,10 +63,7 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 		return $this->enum;
 	}
 
-	/**
-	 * @return \Consistence\Doctrine\Enum\FooEnum|null
-	 */
-	public function getNullableEnum()
+	public function getNullableEnum(): ?FooEnum
 	{
 		return $this->nullableEnum;
 	}

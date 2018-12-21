@@ -10,6 +10,7 @@
 		}
 	],
 	"require": {
+		"php": "~7.1",
 		"consistence/consistence": "~1.0",
 		"doctrine/annotations": "~1.2",
 		"doctrine/orm": "~2.5"

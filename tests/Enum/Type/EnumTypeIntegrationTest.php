@@ -17,7 +17,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function convertEnumToDatabaseProvider(): array
 	{
 		return [
-			[DoctrineType::getType(IntegerEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
+			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
 			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE],
 			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE],
 			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED],
@@ -31,7 +31,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 * @param \Consistence\Enum\Enum $enum
 	 * @param mixed $expectedValue
 	 */
-	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue)
+	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
 		$this->assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
@@ -55,7 +55,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
-	public function testConvertNullToDatabase(DoctrineType $type)
+	public function testConvertNullToDatabase(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
 		$this->assertNull($type->convertToDatabaseValue(null, $platform));
@@ -80,7 +80,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 * @param mixed $scalarValue
 	 */
-	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue)
+	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
 		$this->assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
@@ -104,7 +104,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @param string $typeClass
 	 */
-	public function testGetName(string $typeClass)
+	public function testGetName(string $typeClass): void
 	{
 		$this->assertSame($typeClass::NAME, DoctrineType::getType($typeClass::NAME)->getName());
 	}
@@ -114,7 +114,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
-	public function testRequiresSqlCommentHint(DoctrineType $type)
+	public function testRequiresSqlCommentHint(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
 		$this->assertTrue($type->requiresSQLCommentHint($platform));

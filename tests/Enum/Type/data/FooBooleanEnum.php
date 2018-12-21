@@ -7,7 +7,7 @@ namespace Consistence\Doctrine\Enum\Type;
 class FooBooleanEnum extends \Consistence\Enum\Enum
 {
 
-	const ENABLED = true;
-	const DISABLED = false;
+	public const ENABLED = true;
+	public const DISABLED = false;
 
 }

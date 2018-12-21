@@ -23,14 +23,14 @@ class EnumPostLoadEntityListener
 
 	public function __construct(
 		Reader $annotationReader,
-		Cache $enumFieldsCache = null
+		?Cache $enumFieldsCache = null
 	)
 	{
 		$this->annotationReader = $annotationReader;
 		$this->enumFieldsCache = $enumFieldsCache !== null ? $enumFieldsCache : new ArrayCache();
 	}
 
-	public function postLoad(LifecycleEventArgs $event)
+	public function postLoad(LifecycleEventArgs $event): void
 	{
 		$entity = $event->getEntity();
 		$entityManager = $event->getEntityManager();
@@ -42,7 +42,7 @@ class EnumPostLoadEntityListener
 	public function warmUpCache(
 		EntityManager $entityManager,
 		string $className
-	)
+	): void
 	{
 		$this->getEnumFields($entityManager, $className);
 	}
@@ -94,13 +94,13 @@ class EnumPostLoadEntityListener
 		$entity,
 		string $fieldName,
 		string $enumClassName
-	)
+	): void
 	{
 		$metadata = $this->getClassMetadata($entityManager, get_class($entity));
 		$enumValue = $metadata->getFieldValue($entity, $fieldName);
 
 		if ($enumValue === null) {
-			return null;
+			return;
 		}
 
 		$enum = $enumClassName::get(($enumValue instanceof Enum) ? $enumValue->getValue() : $enumValue);
