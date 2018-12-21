@@ -11,7 +11,7 @@
 	],
 	"require": {
 		"php": "~7.2",
-		"consistence/consistence": "~1.0",
+		"consistence/consistence": "~1.0|~2.0",
 		"doctrine/annotations": "~1.2",
 		"doctrine/orm": "^2.6.3"
 	},
