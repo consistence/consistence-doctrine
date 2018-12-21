@@ -128,6 +128,9 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$postLoadListener->postLoad($loadEvent);
 	}
 
+	/**
+	 * @return mixed[]
+	 */
 	private function getPostLoadListener(): array
 	{
 		$connectionParameters = [

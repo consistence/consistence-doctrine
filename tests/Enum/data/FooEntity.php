@@ -79,6 +79,8 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 	}
 
 	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
+	 *
 	 * @return \Consistence\Doctrine\Enum\FooEmbeddable
 	 */
 	public function getNotLoadedEmbedded()
