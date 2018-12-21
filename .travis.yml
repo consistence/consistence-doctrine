@@ -19,7 +19,6 @@ before_install:
   - composer self-update
 
 install:
-  - composer install --no-interaction --no-suggest --prefer-source
   - composer update --no-interaction --no-suggest --no-suggest --prefer-source ${COMPOSER_DEPENDENCIES_OPTIONS}
 
 script:
