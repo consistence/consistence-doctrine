@@ -6,10 +6,10 @@ namespace Consistence\Doctrine\Enum;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata as PersistenceClassMetadata;
 
 class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,7 +20,7 @@ class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 
 		$postLoadListener = new EnumPostLoadEntityListener($reader);
 
-		$classMetadata = $this->createMock(CommonClassMetadata::class);
+		$classMetadata = $this->createMock(PersistenceClassMetadata::class);
 
 		$entityManager = $this->createMock(EntityManager::class);
 		$entityManager
