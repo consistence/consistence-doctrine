@@ -79,7 +79,7 @@ class FooEntity extends \Consistence\Doctrine\Enum\FooParentEntity
 	}
 
 	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 *
 	 * @return \Consistence\Doctrine\Enum\FooEmbeddable
 	 */
