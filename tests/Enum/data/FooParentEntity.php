@@ -7,7 +7,7 @@ namespace Consistence\Doctrine\Enum;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\MappedSuperClass
+ * @ORM\MappedSuperclass
  */
 class FooParentEntity
 {
