@@ -93,6 +93,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		try {
 			$this->callPostLoadEventOnEntity(new BazEntity());
+			Assert::fail('Exception expected');
 		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
 			Assert::assertSame('Consistence\Doctrine\Enum\NonExistingClass', $e->getEnumClass());
 		}
@@ -102,6 +103,7 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		try {
 			$this->callPostLoadEventOnEntity(new BaxEntity());
+			Assert::fail('Exception expected');
 		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
 			Assert::assertSame(FooEntity::class, $e->getEnumClass());
 		}
