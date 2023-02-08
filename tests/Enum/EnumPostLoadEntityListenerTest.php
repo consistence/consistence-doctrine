@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\ClassMetadata as PersistenceClassMetadata;
+use PHPUnit\Framework\Assert;
 
 class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 {
@@ -24,16 +25,16 @@ class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 
 		$entityManager = $this->createMock(EntityManager::class);
 		$entityManager
-			->expects($this->once())
+			->expects(self::once())
 			->method('getClassMetadata')
-			->will($this->returnValue($classMetadata));
+			->will(self::returnValue($classMetadata));
 
 		$loadEvent = new LifecycleEventArgs(new FooEntity(), $entityManager);
 
 		try {
 			$postLoadListener->postLoad($loadEvent);
 		} catch (\Consistence\Doctrine\Enum\UnsupportedClassMetadataException $e) {
-			$this->assertSame(get_class($classMetadata), $e->getGivenClassMetadataClass());
+			Assert::assertSame(get_class($classMetadata), $e->getGivenClassMetadataClass());
 		}
 	}
 
@@ -48,13 +49,13 @@ class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 
 		$entityManager = $this->createMock(EntityManager::class);
 		$entityManager
-			->expects($this->once())
+			->expects(self::once())
 			->method('getClassMetadata')
-			->will($this->returnValue($classMetadata));
+			->will(self::returnValue($classMetadata));
 
 		$postLoadListener->warmUpCache($entityManager, FooEntity::class);
 
-		$this->assertTrue($cache->contains(FooEntity::class));
+		Assert::assertTrue($cache->contains(FooEntity::class));
 	}
 
 }
