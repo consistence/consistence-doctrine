@@ -7,6 +7,7 @@ namespace Consistence\Doctrine\Enum\Type;
 use Consistence\Enum\Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type as DoctrineType;
+use PHPUnit\Framework\Assert;
 
 class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 {
@@ -34,7 +35,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
+		Assert::assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
 	}
 
 	/**
@@ -58,7 +59,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testConvertNullToDatabase(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertNull($type->convertToDatabaseValue(null, $platform));
+		Assert::assertNull($type->convertToDatabaseValue(null, $platform));
 	}
 
 	/**
@@ -83,7 +84,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
+		Assert::assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
 	}
 
 	/**
@@ -93,7 +94,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testGetName(DoctrineType $type): void
 	{
-		$this->assertSame($type::NAME, $type->getName());
+		Assert::assertSame($type::NAME, $type->getName());
 	}
 
 	/**
@@ -104,7 +105,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testRequiresSqlCommentHint(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertTrue($type->requiresSQLCommentHint($platform));
+		Assert::assertTrue($type->requiresSQLCommentHint($platform));
 	}
 
 }
