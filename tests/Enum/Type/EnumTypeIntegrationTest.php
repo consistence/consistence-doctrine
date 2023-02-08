@@ -7,22 +7,21 @@ namespace Consistence\Doctrine\Enum\Type;
 use Consistence\Enum\Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type as DoctrineType;
+use Generator;
 use PHPUnit\Framework\Assert;
 
 class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 {
 
 	/**
-	 * @return mixed[][]
+	 * @return mixed[][]|\Generator
 	 */
-	public function convertEnumToDatabaseDataProvider(): array
+	public function convertEnumToDatabaseDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
-			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE],
-			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE],
-			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED],
-		];
+		yield [DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE];
+		yield [DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE];
+		yield [DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE];
+		yield [DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED];
 	}
 
 	/**
@@ -39,16 +38,14 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @return \Doctrine\DBAL\Types\Type[][]
+	 * @return \Doctrine\DBAL\Types\Type[][]|\Generator
 	 */
-	public function enumTypeDataProvider(): array
+	public function enumTypeDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME)],
-			[DoctrineType::getType(IntegerEnumType::NAME)],
-			[DoctrineType::getType(StringEnumType::NAME)],
-			[DoctrineType::getType(BooleanEnumType::NAME)],
-		];
+		yield [DoctrineType::getType(FloatEnumType::NAME)];
+		yield [DoctrineType::getType(IntegerEnumType::NAME)];
+		yield [DoctrineType::getType(StringEnumType::NAME)];
+		yield [DoctrineType::getType(BooleanEnumType::NAME)];
 	}
 
 	/**
@@ -63,16 +60,14 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @return mixed[][]
+	 * @return mixed[][]|\Generator
 	 */
-	public function convertScalarValueToDatabaseDataProvider(): array
+	public function convertScalarValueToDatabaseDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE],
-			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::ONE],
-			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::ONE],
-			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::ENABLED],
-		];
+		yield [DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE];
+		yield [DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::ONE];
+		yield [DoctrineType::getType(StringEnumType::NAME), FooStringEnum::ONE];
+		yield [DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::ENABLED];
 	}
 
 	/**
