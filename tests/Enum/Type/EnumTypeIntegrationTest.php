@@ -18,22 +18,22 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function convertEnumToDatabaseDataProvider(): Generator
 	{
-		yield [
+		yield 'float enum' => [
 			'type' => DoctrineType::getType(FloatEnumType::NAME),
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
 			'expectedValue' => FooFloatEnum::ONE,
 		];
-		yield [
+		yield 'integer enum' => [
 			'type' => DoctrineType::getType(IntegerEnumType::NAME),
 			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
 			'expectedValue' => FooIntegerEnum::ONE,
 		];
-		yield [
+		yield 'string enum' => [
 			'type' => DoctrineType::getType(StringEnumType::NAME),
 			'enum' => FooStringEnum::get(FooStringEnum::ONE),
 			'expectedValue' => FooStringEnum::ONE,
 		];
-		yield [
+		yield 'boolean enum' => [
 			'type' => DoctrineType::getType(BooleanEnumType::NAME),
 			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
 			'expectedValue' => FooBooleanEnum::ENABLED,
@@ -58,16 +58,16 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function enumTypeDataProvider(): Generator
 	{
-		yield [
+		yield 'float enum' => [
 			'type' => DoctrineType::getType(FloatEnumType::NAME),
 		];
-		yield [
+		yield 'integer enum' => [
 			'type' => DoctrineType::getType(IntegerEnumType::NAME),
 		];
-		yield [
+		yield 'string enum' => [
 			'type' => DoctrineType::getType(StringEnumType::NAME),
 		];
-		yield [
+		yield 'boolean enum' => [
 			'type' => DoctrineType::getType(BooleanEnumType::NAME),
 		];
 	}
@@ -88,19 +88,19 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function convertScalarValueToDatabaseDataProvider(): Generator
 	{
-		yield [
+		yield 'float enum' => [
 			'type' => DoctrineType::getType(FloatEnumType::NAME),
 			'scalarValue' => FooFloatEnum::ONE,
 		];
-		yield [
+		yield 'integer enum' => [
 			'type' => DoctrineType::getType(IntegerEnumType::NAME),
 			'scalarValue' => FooIntegerEnum::ONE,
 		];
-		yield [
+		yield 'string enum' => [
 			'type' => DoctrineType::getType(StringEnumType::NAME),
 			'scalarValue' => FooStringEnum::ONE,
 		];
-		yield [
+		yield 'boolean enum' => [
 			'type' => DoctrineType::getType(BooleanEnumType::NAME),
 			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
