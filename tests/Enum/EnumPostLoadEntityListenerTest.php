@@ -33,6 +33,7 @@ class EnumPostLoadEntityListenerTest extends \PHPUnit\Framework\TestCase
 
 		try {
 			$postLoadListener->postLoad($loadEvent);
+			Assert::fail('Exception expected');
 		} catch (\Consistence\Doctrine\Enum\UnsupportedClassMetadataException $e) {
 			Assert::assertSame(get_class($classMetadata), $e->getGivenClassMetadataClass());
 		}
