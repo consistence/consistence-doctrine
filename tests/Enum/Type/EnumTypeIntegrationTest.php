@@ -19,24 +19,24 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function convertEnumToDatabaseDataProvider(): Generator
 	{
 		yield [
-			DoctrineType::getType(FloatEnumType::NAME),
-			FooFloatEnum::get(FooFloatEnum::ONE),
-			FooFloatEnum::ONE,
+			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
+			'expectedValue' => FooFloatEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(IntegerEnumType::NAME),
-			FooIntegerEnum::get(FooIntegerEnum::ONE),
-			FooIntegerEnum::ONE,
+			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
+			'expectedValue' => FooIntegerEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(StringEnumType::NAME),
-			FooStringEnum::get(FooStringEnum::ONE),
-			FooStringEnum::ONE,
+			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'enum' => FooStringEnum::get(FooStringEnum::ONE),
+			'expectedValue' => FooStringEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(BooleanEnumType::NAME),
-			FooBooleanEnum::get(FooBooleanEnum::ENABLED),
-			FooBooleanEnum::ENABLED,
+			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
+			'expectedValue' => FooBooleanEnum::ENABLED,
 		];
 	}
 
@@ -59,16 +59,16 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function enumTypeDataProvider(): Generator
 	{
 		yield [
-			DoctrineType::getType(FloatEnumType::NAME),
+			'type' => DoctrineType::getType(FloatEnumType::NAME),
 		];
 		yield [
-			DoctrineType::getType(IntegerEnumType::NAME),
+			'type' => DoctrineType::getType(IntegerEnumType::NAME),
 		];
 		yield [
-			DoctrineType::getType(StringEnumType::NAME),
+			'type' => DoctrineType::getType(StringEnumType::NAME),
 		];
 		yield [
-			DoctrineType::getType(BooleanEnumType::NAME),
+			'type' => DoctrineType::getType(BooleanEnumType::NAME),
 		];
 	}
 
@@ -89,20 +89,20 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function convertScalarValueToDatabaseDataProvider(): Generator
 	{
 		yield [
-			DoctrineType::getType(FloatEnumType::NAME),
-			FooFloatEnum::ONE,
+			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'scalarValue' => FooFloatEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(IntegerEnumType::NAME),
-			FooIntegerEnum::ONE,
+			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'scalarValue' => FooIntegerEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(StringEnumType::NAME),
-			FooStringEnum::ONE,
+			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'scalarValue' => FooStringEnum::ONE,
 		];
 		yield [
-			DoctrineType::getType(BooleanEnumType::NAME),
-			FooBooleanEnum::ENABLED,
+			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
 	}
 
