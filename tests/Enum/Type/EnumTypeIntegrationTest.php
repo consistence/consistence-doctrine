@@ -18,10 +18,26 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function convertEnumToDatabaseDataProvider(): Generator
 	{
-		yield [DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE];
-		yield [DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE];
-		yield [DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE];
-		yield [DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED];
+		yield [
+			DoctrineType::getType(FloatEnumType::NAME),
+			FooFloatEnum::get(FooFloatEnum::ONE),
+			FooFloatEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(IntegerEnumType::NAME),
+			FooIntegerEnum::get(FooIntegerEnum::ONE),
+			FooIntegerEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(StringEnumType::NAME),
+			FooStringEnum::get(FooStringEnum::ONE),
+			FooStringEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(BooleanEnumType::NAME),
+			FooBooleanEnum::get(FooBooleanEnum::ENABLED),
+			FooBooleanEnum::ENABLED,
+		];
 	}
 
 	/**
@@ -42,10 +58,18 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function enumTypeDataProvider(): Generator
 	{
-		yield [DoctrineType::getType(FloatEnumType::NAME)];
-		yield [DoctrineType::getType(IntegerEnumType::NAME)];
-		yield [DoctrineType::getType(StringEnumType::NAME)];
-		yield [DoctrineType::getType(BooleanEnumType::NAME)];
+		yield [
+			DoctrineType::getType(FloatEnumType::NAME),
+		];
+		yield [
+			DoctrineType::getType(IntegerEnumType::NAME),
+		];
+		yield [
+			DoctrineType::getType(StringEnumType::NAME),
+		];
+		yield [
+			DoctrineType::getType(BooleanEnumType::NAME),
+		];
 	}
 
 	/**
@@ -64,10 +88,22 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function convertScalarValueToDatabaseDataProvider(): Generator
 	{
-		yield [DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE];
-		yield [DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::ONE];
-		yield [DoctrineType::getType(StringEnumType::NAME), FooStringEnum::ONE];
-		yield [DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::ENABLED];
+		yield [
+			DoctrineType::getType(FloatEnumType::NAME),
+			FooFloatEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(IntegerEnumType::NAME),
+			FooIntegerEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(StringEnumType::NAME),
+			FooStringEnum::ONE,
+		];
+		yield [
+			DoctrineType::getType(BooleanEnumType::NAME),
+			FooBooleanEnum::ENABLED,
+		];
 	}
 
 	/**
