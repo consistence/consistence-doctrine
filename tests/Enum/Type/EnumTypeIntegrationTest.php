@@ -15,7 +15,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return mixed[][]
 	 */
-	public function convertEnumToDatabaseProvider(): array
+	public function convertEnumToDatabaseDataProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
@@ -26,7 +26,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider convertEnumToDatabaseProvider
+	 * @dataProvider convertEnumToDatabaseDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 * @param \Consistence\Enum\Enum $enum
@@ -41,7 +41,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return \Doctrine\DBAL\Types\Type[][]
 	 */
-	public function enumTypeProvider(): array
+	public function enumTypeDataProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME)],
@@ -52,7 +52,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypeProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
@@ -65,7 +65,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return mixed[][]
 	 */
-	public function convertScalarValueToDatabaseProvider(): array
+	public function convertScalarValueToDatabaseDataProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE],
@@ -76,7 +76,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider convertScalarValueToDatabaseProvider
+	 * @dataProvider convertScalarValueToDatabaseDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 * @param mixed $scalarValue
@@ -88,7 +88,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypeProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
@@ -98,7 +98,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypeProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
