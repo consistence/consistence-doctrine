@@ -87,26 +87,13 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @return string[][]
-	 */
-	public function enumTypeClassesProvider(): array
-	{
-		return [
-			[FloatEnumType::class],
-			[IntegerEnumType::class],
-			[StringEnumType::class],
-			[BooleanEnumType::class],
-		];
-	}
-
-	/**
-	 * @dataProvider enumTypeClassesProvider
+	 * @dataProvider enumTypesProvider
 	 *
-	 * @param string $typeClass
+	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
-	public function testGetName(string $typeClass): void
+	public function testGetName(DoctrineType $type): void
 	{
-		$this->assertSame($typeClass::NAME, DoctrineType::getType($typeClass::NAME)->getName());
+		$this->assertSame($type::NAME, $type->getName());
 	}
 
 	/**
