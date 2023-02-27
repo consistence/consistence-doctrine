@@ -75,23 +75,35 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->callPostLoadEventOnEntity(new BarEntity());
 	}
 
-	public function testLoadEnumNonExistingEnumClass(): void
+	public function loadEnumNotEnumClassDataProvider(): Generator
 	{
-		try {
-			$this->callPostLoadEventOnEntity(new BazEntity());
-			Assert::fail('Exception expected');
-		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
-			Assert::assertSame('Consistence\Doctrine\Enum\NonExistingClass', $e->getEnumClass());
-		}
+		yield 'non-existing class' => [
+			'entity' => new BazEntity(),
+			'expectedNotEnumClass' => 'Consistence\Doctrine\Enum\NonExistingClass',
+		];
+
+		yield 'not enum class' => [
+			'entity' => new BaxEntity(),
+			'expectedNotEnumClass' => FooEntity::class,
+		];
 	}
 
-	public function testLoadEnumNotEnumClass(): void
+	/**
+	 * @dataProvider loadEnumNotEnumClassDataProvider
+	 *
+	 * @param object $entity
+	 * @param string $expectedNotEnumClass
+	 */
+	public function testLoadEnumNotEnumClass(
+		object $entity,
+		string $expectedNotEnumClass
+	): void
 	{
 		try {
-			$this->callPostLoadEventOnEntity(new BaxEntity());
+			$this->callPostLoadEventOnEntity($entity);
 			Assert::fail('Exception expected');
 		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
-			Assert::assertSame(FooEntity::class, $e->getEnumClass());
+			Assert::assertSame($expectedNotEnumClass, $e->getEnumClass());
 		}
 	}
 
