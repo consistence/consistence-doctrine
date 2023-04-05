@@ -7,25 +7,55 @@ namespace Consistence\Doctrine\Enum\Type;
 use Consistence\Enum\Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type as DoctrineType;
+use Generator;
+use PHPUnit\Framework\Assert;
 
 class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 {
 
 	/**
-	 * @return mixed[][]
+	 * @return mixed[][]|\Generator
 	 */
-	public function convertEnumToDatabaseProvider(): array
+	public function enumDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::get(FooFloatEnum::ONE), FooFloatEnum::ONE],
-			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::get(FooIntegerEnum::ONE), FooIntegerEnum::ONE],
-			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::get(FooStringEnum::ONE), FooStringEnum::ONE],
-			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::get(FooBooleanEnum::ENABLED), FooBooleanEnum::ENABLED],
+		yield 'float enum' => [
+			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
+			'scalarValue' => FooFloatEnum::ONE,
+		];
+		yield 'integer enum' => [
+			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
+			'scalarValue' => FooIntegerEnum::ONE,
+		];
+		yield 'string enum' => [
+			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'enum' => FooStringEnum::get(FooStringEnum::ONE),
+			'scalarValue' => FooStringEnum::ONE,
+		];
+		yield 'boolean enum' => [
+			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
+			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
 	}
 
 	/**
-	 * @dataProvider convertEnumToDatabaseProvider
+	 * @return mixed[][]|\Generator
+	 */
+	public function convertEnumToDatabaseDataProvider(): Generator
+	{
+		foreach ($this->enumDataProvider() as $caseName => $caseData) {
+			yield $caseName => [
+				'type' => $caseData['type'],
+				'enum' => $caseData['enum'],
+				'expectedValue' => $caseData['scalarValue'],
+			];
+		}
+	}
+
+	/**
+	 * @dataProvider convertEnumToDatabaseDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 * @param \Consistence\Enum\Enum $enum
@@ -34,48 +64,47 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
+		Assert::assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
 	}
 
 	/**
-	 * @return \Doctrine\DBAL\Types\Type[][]
+	 * @return \Doctrine\DBAL\Types\Type[][]|\Generator
 	 */
-	public function enumTypesProvider(): array
+	public function enumTypeDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME)],
-			[DoctrineType::getType(IntegerEnumType::NAME)],
-			[DoctrineType::getType(StringEnumType::NAME)],
-			[DoctrineType::getType(BooleanEnumType::NAME)],
-		];
+		foreach ($this->enumDataProvider() as $caseName => $caseData) {
+			yield $caseName => [
+				'type' => $caseData['type'],
+			];
+		}
 	}
 
 	/**
-	 * @dataProvider enumTypesProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
 	public function testConvertNullToDatabase(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertNull($type->convertToDatabaseValue(null, $platform));
+		Assert::assertNull($type->convertToDatabaseValue(null, $platform));
 	}
 
 	/**
-	 * @return mixed[][]
+	 * @return mixed[][]|\Generator
 	 */
-	public function convertScalarValueToDatabaseProvider(): array
+	public function convertScalarValueToDatabaseDataProvider(): Generator
 	{
-		return [
-			[DoctrineType::getType(FloatEnumType::NAME), FooFloatEnum::ONE],
-			[DoctrineType::getType(IntegerEnumType::NAME), FooIntegerEnum::ONE],
-			[DoctrineType::getType(StringEnumType::NAME), FooStringEnum::ONE],
-			[DoctrineType::getType(BooleanEnumType::NAME), FooBooleanEnum::ENABLED],
-		];
+		foreach ($this->enumDataProvider() as $caseName => $caseData) {
+			yield $caseName => [
+				'type' => $caseData['type'],
+				'scalarValue' => $caseData['scalarValue'],
+			];
+		}
 	}
 
 	/**
-	 * @dataProvider convertScalarValueToDatabaseProvider
+	 * @dataProvider convertScalarValueToDatabaseDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 * @param mixed $scalarValue
@@ -83,41 +112,28 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
+		Assert::assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
 	}
 
 	/**
-	 * @return string[][]
-	 */
-	public function enumTypeClassesProvider(): array
-	{
-		return [
-			[FloatEnumType::class],
-			[IntegerEnumType::class],
-			[StringEnumType::class],
-			[BooleanEnumType::class],
-		];
-	}
-
-	/**
-	 * @dataProvider enumTypeClassesProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param string $typeClass
+	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
-	public function testGetName(string $typeClass): void
+	public function testGetName(DoctrineType $type): void
 	{
-		$this->assertSame($typeClass::NAME, DoctrineType::getType($typeClass::NAME)->getName());
+		Assert::assertSame($type::NAME, $type->getName());
 	}
 
 	/**
-	 * @dataProvider enumTypesProvider
+	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
 	public function testRequiresSqlCommentHint(DoctrineType $type): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		$this->assertTrue($type->requiresSQLCommentHint($platform));
+		Assert::assertTrue($type->requiresSQLCommentHint($platform));
 	}
 
 }
