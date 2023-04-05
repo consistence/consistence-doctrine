@@ -41,7 +41,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return \Doctrine\DBAL\Types\Type[][]
 	 */
-	public function enumTypesProvider(): array
+	public function enumTypeProvider(): array
 	{
 		return [
 			[DoctrineType::getType(FloatEnumType::NAME)],
@@ -52,7 +52,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypesProvider
+	 * @dataProvider enumTypeProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
@@ -88,7 +88,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypesProvider
+	 * @dataProvider enumTypeProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
@@ -98,7 +98,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @dataProvider enumTypesProvider
+	 * @dataProvider enumTypeProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type
 	 */
