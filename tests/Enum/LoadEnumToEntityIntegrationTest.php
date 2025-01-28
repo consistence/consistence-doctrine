@@ -7,77 +7,64 @@ namespace Consistence\Doctrine\Enum;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Tools\Setup;
+use Generator;
+use PHPUnit\Framework\Assert;
 
 class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 {
 
-	public function testLoadEnumToEntity(): void
+	/**
+	 * @return mixed[][]|\Generator
+	 */
+	public function loadEnumToEntityDataProvider(): Generator
 	{
-		$foo = new FooEntity();
-		$this->callPostLoadEventOnEntity($foo);
+		yield 'entity' => [
+			'foo' => new FooEntity(),
+		];
 
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		yield 'unserialized entity' => (function (): array {
+			$fooBeforeSerialization = new FooEntity();
+			$fooBeforeSerialization->setEnum(FooEnum::get(FooEnum::ONE));
+
+			return [
+				'foo' => unserialize(serialize($fooBeforeSerialization)),
+			];
+		})();
 	}
 
-	public function testLoadNullEnumToEntity(): void
+	/**
+	 * @dataProvider loadEnumToEntityDataProvider
+	 *
+	 * @param \Consistence\Doctrine\Enum\FooEntity $foo
+	 */
+	public function testLoadEnumToEntity(FooEntity $foo): void
 	{
-		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
 
-		$this->assertNull($foo->getNullableEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getWithoutNamespace());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEmbedded()->getEnum());
+		Assert::assertNull($foo->getNullableEnum());
+		Assert::assertNull($foo->getNotLoadedEmbedded());
 	}
 
-	public function testLoadEnumToUnserializedEntity(): void
+	/**
+	 * @dataProvider loadEnumToEntityDataProvider
+	 *
+	 * @param \Consistence\Doctrine\Enum\FooEntity $foo
+	 */
+	public function testMultipleLoadEvents(FooEntity $foo): void
 	{
-		$fooBeforeSerialization = new FooEntity();
-		$fooBeforeSerialization->setEnum(FooEnum::get(FooEnum::ONE));
-
-		$foo = unserialize(serialize($fooBeforeSerialization));
-		$this->callPostLoadEventOnEntity($foo);
-
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
-		$this->assertNull($foo->getNullableEnum());
-	}
-
-	public function testMultipleLoadEvents(): void
-	{
-		$foo = new FooEntity();
 		$this->callPostLoadEventOnEntity($foo);
 		$this->callPostLoadEventOnEntity($foo);
 
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
-	}
-
-	public function testLoadEnumClassWithoutNamespace(): void
-	{
-		$foo = new FooEntity();
-		$this->callPostLoadEventOnEntity($foo);
-
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getWithoutNamespace());
-	}
-
-	public function testLoadEnumInEmbeddable(): void
-	{
-		$foo = new FooEntity();
-		$this->callPostLoadEventOnEntity($foo);
-
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEnum());
-	}
-
-	public function testLoadEnumInEmbeddableWeNeedToGoDeeper(): void
-	{
-		$foo = new FooEntity();
-		$this->callPostLoadEventOnEntity($foo);
-
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEmbedded()->getEnum());
-	}
-
-	public function testLoadEnumInNotLoadedEmbeddable(): void
-	{
-		$foo = new FooEntity();
-		$this->callPostLoadEventOnEntity($foo);
-
-		$this->assertNull($foo->getNotLoadedEmbedded());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getWithoutNamespace());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEmbedded()->getEmbedded()->getEnum());
+		Assert::assertNull($foo->getNullableEnum());
+		Assert::assertNull($foo->getNotLoadedEmbedded());
 	}
 
 	public function testLoadEnumMissingEnumClass(): void
@@ -88,21 +75,35 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$this->callPostLoadEventOnEntity(new BarEntity());
 	}
 
-	public function testLoadEnumNonExistingEnumClass(): void
+	public function loadEnumNotEnumClassDataProvider(): Generator
 	{
-		try {
-			$this->callPostLoadEventOnEntity(new BazEntity());
-		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
-			$this->assertSame('Consistence\Doctrine\Enum\NonExistingClass', $e->getEnumClass());
-		}
+		yield 'non-existing class' => [
+			'entity' => new BazEntity(),
+			'expectedNotEnumClass' => 'Consistence\Doctrine\Enum\NonExistingClass',
+		];
+
+		yield 'not enum class' => [
+			'entity' => new BaxEntity(),
+			'expectedNotEnumClass' => FooEntity::class,
+		];
 	}
 
-	public function testLoadEnumNotEnumClass(): void
+	/**
+	 * @dataProvider loadEnumNotEnumClassDataProvider
+	 *
+	 * @param object $entity
+	 * @param string $expectedNotEnumClass
+	 */
+	public function testLoadEnumNotEnumClass(
+		object $entity,
+		string $expectedNotEnumClass
+	): void
 	{
 		try {
-			$this->callPostLoadEventOnEntity(new BaxEntity());
+			$this->callPostLoadEventOnEntity($entity);
+			Assert::fail('Exception expected');
 		} catch (\Consistence\Doctrine\Enum\NotEnumException $e) {
-			$this->assertSame(FooEntity::class, $e->getEnumClass());
+			Assert::assertSame($expectedNotEnumClass, $e->getEnumClass());
 		}
 	}
 
@@ -116,8 +117,8 @@ class LoadEnumToEntityIntegrationTest extends \PHPUnit\Framework\TestCase
 		$postLoadListener->postLoad(new LifecycleEventArgs($foo, $entityManager));
 		$postLoadListener->postLoad(new LifecycleEventArgs($iAmFooToo, $entityManager));
 
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
-		$this->assertSame(FooEnum::get(FooEnum::ONE), $iAmFooToo->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $foo->getEnum());
+		Assert::assertSame(FooEnum::get(FooEnum::ONE), $iAmFooToo->getEnum());
 	}
 
 	private function callPostLoadEventOnEntity(object $entity): void
