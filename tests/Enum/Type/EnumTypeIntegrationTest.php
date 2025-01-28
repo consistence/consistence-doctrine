@@ -19,22 +19,22 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function enumDataProvider(): Generator
 	{
 		yield 'float enum' => [
-			'dbalType' => DbalType::getType(FloatEnumType::NAME),
+			'dbalTypeName' => FloatEnumType::NAME,
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
 			'scalarValue' => FooFloatEnum::ONE,
 		];
 		yield 'integer enum' => [
-			'dbalType' => DbalType::getType(IntegerEnumType::NAME),
+			'dbalTypeName' => IntegerEnumType::NAME,
 			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
 			'scalarValue' => FooIntegerEnum::ONE,
 		];
 		yield 'string enum' => [
-			'dbalType' => DbalType::getType(StringEnumType::NAME),
+			'dbalTypeName' => StringEnumType::NAME,
 			'enum' => FooStringEnum::get(FooStringEnum::ONE),
 			'scalarValue' => FooStringEnum::ONE,
 		];
 		yield 'boolean enum' => [
-			'dbalType' => DbalType::getType(BooleanEnumType::NAME),
+			'dbalTypeName' => BooleanEnumType::NAME,
 			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
 			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
@@ -47,7 +47,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'dbalType' => $caseData['dbalType'],
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
 				'enum' => $caseData['enum'],
 				'expectedValue' => $caseData['scalarValue'],
 			];
@@ -74,7 +74,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'dbalType' => $caseData['dbalType'],
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
 			];
 		}
 	}
