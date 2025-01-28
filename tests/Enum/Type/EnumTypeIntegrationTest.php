@@ -18,6 +18,19 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function enumDataProvider(): Generator
 	{
+		foreach ([
+			BooleanEnumType::class,
+			FloatEnumType::class,
+			IntegerEnumType::class,
+			StringEnumType::class,
+		] as $doctrineTypeClass) {
+			if (DoctrineType::hasType($doctrineTypeClass::NAME)) {
+				DoctrineType::overrideType($doctrineTypeClass::NAME, $doctrineTypeClass);
+			} else {
+				DoctrineType::addType($doctrineTypeClass::NAME, $doctrineTypeClass);
+			}
+		}
+
 		yield 'float enum' => [
 			'dbalTypeName' => FloatEnumType::NAME,
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
