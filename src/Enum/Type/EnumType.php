@@ -6,7 +6,7 @@ namespace Consistence\Doctrine\Enum\Type;
 
 use Consistence\Enum\Enum;
 
-class EnumType
+class EnumType extends \Consistence\ObjectPrototype
 {
 
 	/**
