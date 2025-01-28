@@ -10,16 +10,16 @@ class EnumType
 {
 
 	/**
-	 * @param \Consistence\Enum\Enum|mixed $value
+	 * @param \Consistence\Enum\Enum|null $value
 	 * @return mixed
 	 */
-	public static function convertToDatabaseValue($value)
+	public static function convertToDatabaseValue(?Enum $value)
 	{
-		if ($value instanceof Enum) {
-			return $value->getValue();
+		if ($value === null) {
+			return null;
 		}
 
-		return $value;
+		return $value->getValue();
 	}
 
 }

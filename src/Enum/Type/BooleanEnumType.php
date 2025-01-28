@@ -17,7 +17,9 @@ class BooleanEnumType extends \Doctrine\DBAL\Types\BooleanType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|bool|null $value
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+	 *
+	 * @param \Consistence\Enum\Enum|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return bool|null
 	 */

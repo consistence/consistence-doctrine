@@ -17,7 +17,9 @@ class StringEnumType extends \Doctrine\DBAL\Types\StringType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|string|null $value
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+	 *
+	 * @param \Consistence\Enum\Enum|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return string|null
 	 */

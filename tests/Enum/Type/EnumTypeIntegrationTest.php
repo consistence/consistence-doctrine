@@ -91,31 +91,6 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * @return mixed[][]|\Generator
-	 */
-	public function convertScalarValueToDatabaseDataProvider(): Generator
-	{
-		foreach ($this->enumDataProvider() as $caseName => $caseData) {
-			yield $caseName => [
-				'type' => $caseData['type'],
-				'scalarValue' => $caseData['scalarValue'],
-			];
-		}
-	}
-
-	/**
-	 * @dataProvider convertScalarValueToDatabaseDataProvider
-	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
-	 * @param mixed $scalarValue
-	 */
-	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue): void
-	{
-		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
-	}
-
-	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
 	 * @param \Doctrine\DBAL\Types\Type $type

@@ -17,7 +17,9 @@ class IntegerEnumType extends \Doctrine\DBAL\Types\IntegerType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|int|null $value
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+	 *
+	 * @param \Consistence\Enum\Enum|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return int|null
 	 */

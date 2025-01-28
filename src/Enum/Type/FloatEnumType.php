@@ -17,7 +17,9 @@ class FloatEnumType extends \Doctrine\DBAL\Types\FloatType
 	}
 
 	/**
-	 * @param \Consistence\Enum\Enum|float|null $value
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+	 *
+	 * @param \Consistence\Enum\Enum|null $value
 	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
 	 * @return float|null
 	 */
