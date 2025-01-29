@@ -6,7 +6,7 @@ namespace Consistence\Doctrine\Enum\Type;
 
 use Consistence\Enum\Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\Type as DoctrineType;
+use Doctrine\DBAL\Types\Type as DbalType;
 use Generator;
 use PHPUnit\Framework\Assert;
 
@@ -19,22 +19,22 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function enumDataProvider(): Generator
 	{
 		yield 'float enum' => [
-			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'dbalType' => DbalType::getType(FloatEnumType::NAME),
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
 			'scalarValue' => FooFloatEnum::ONE,
 		];
 		yield 'integer enum' => [
-			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'dbalType' => DbalType::getType(IntegerEnumType::NAME),
 			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
 			'scalarValue' => FooIntegerEnum::ONE,
 		];
 		yield 'string enum' => [
-			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'dbalType' => DbalType::getType(StringEnumType::NAME),
 			'enum' => FooStringEnum::get(FooStringEnum::ONE),
 			'scalarValue' => FooStringEnum::ONE,
 		];
 		yield 'boolean enum' => [
-			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'dbalType' => DbalType::getType(BooleanEnumType::NAME),
 			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
 			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
@@ -47,7 +47,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'dbalType' => $caseData['dbalType'],
 				'enum' => $caseData['enum'],
 				'expectedValue' => $caseData['scalarValue'],
 			];
@@ -57,14 +57,14 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider convertEnumToDatabaseDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 * @param \Consistence\Enum\Enum $enum
 	 * @param mixed $expectedValue
 	 */
-	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
+	public function testConvertEnumToDatabase(DbalType $dbalType, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
+		Assert::assertSame($expectedValue, $dbalType->convertToDatabaseValue($enum, $platform));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'dbalType' => $caseData['dbalType'],
 			];
 		}
 	}
@@ -82,33 +82,33 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testConvertNullToDatabase(DoctrineType $type): void
+	public function testConvertNullToDatabase(DbalType $dbalType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertNull($type->convertToDatabaseValue(null, $platform));
+		Assert::assertNull($dbalType->convertToDatabaseValue(null, $platform));
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testGetName(DoctrineType $type): void
+	public function testGetName(DbalType $dbalType): void
 	{
-		Assert::assertSame($type::NAME, $type->getName());
+		Assert::assertSame($dbalType::NAME, $dbalType->getName());
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testRequiresSqlCommentHint(DoctrineType $type): void
+	public function testRequiresSqlCommentHint(DbalType $dbalType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertTrue($type->requiresSQLCommentHint($platform));
+		Assert::assertTrue($dbalType->requiresSQLCommentHint($platform));
 	}
 
 }
