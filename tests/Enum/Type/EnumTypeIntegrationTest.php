@@ -19,22 +19,22 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	public function enumDataProvider(): Generator
 	{
 		yield 'float enum' => [
-			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'doctrineType' => DoctrineType::getType(FloatEnumType::NAME),
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
 			'scalarValue' => FooFloatEnum::ONE,
 		];
 		yield 'integer enum' => [
-			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'doctrineType' => DoctrineType::getType(IntegerEnumType::NAME),
 			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
 			'scalarValue' => FooIntegerEnum::ONE,
 		];
 		yield 'string enum' => [
-			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'doctrineType' => DoctrineType::getType(StringEnumType::NAME),
 			'enum' => FooStringEnum::get(FooStringEnum::ONE),
 			'scalarValue' => FooStringEnum::ONE,
 		];
 		yield 'boolean enum' => [
-			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'doctrineType' => DoctrineType::getType(BooleanEnumType::NAME),
 			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
 			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
@@ -47,7 +47,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'doctrineType' => $caseData['doctrineType'],
 				'enum' => $caseData['enum'],
 				'expectedValue' => $caseData['scalarValue'],
 			];
@@ -57,14 +57,14 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider convertEnumToDatabaseDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $doctrineType
 	 * @param \Consistence\Enum\Enum $enum
 	 * @param mixed $expectedValue
 	 */
-	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
+	public function testConvertEnumToDatabase(DoctrineType $doctrineType, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
+		Assert::assertSame($expectedValue, $doctrineType->convertToDatabaseValue($enum, $platform));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'doctrineType' => $caseData['doctrineType'],
 			];
 		}
 	}
@@ -82,33 +82,33 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $doctrineType
 	 */
-	public function testConvertNullToDatabase(DoctrineType $type): void
+	public function testConvertNullToDatabase(DoctrineType $doctrineType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertNull($type->convertToDatabaseValue(null, $platform));
+		Assert::assertNull($doctrineType->convertToDatabaseValue(null, $platform));
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $doctrineType
 	 */
-	public function testGetName(DoctrineType $type): void
+	public function testGetName(DoctrineType $doctrineType): void
 	{
-		Assert::assertSame($type::NAME, $type->getName());
+		Assert::assertSame($doctrineType::NAME, $doctrineType->getName());
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $doctrineType
 	 */
-	public function testRequiresSqlCommentHint(DoctrineType $type): void
+	public function testRequiresSqlCommentHint(DoctrineType $doctrineType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertTrue($type->requiresSQLCommentHint($platform));
+		Assert::assertTrue($doctrineType->requiresSQLCommentHint($platform));
 	}
 
 }
