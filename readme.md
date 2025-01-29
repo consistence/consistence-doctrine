@@ -26,25 +26,12 @@ class Sex extends \Consistence\Enum\Enum
 }
 ```
 
-Now you can use the `Sex` enum in your `User` entity. There are two important things to notice:
-
-1) `type="string_enum"` in `ORM\Column` - this will be used for mapping the value to your database, that means if you have a string based enum (see values in `Sex`), use `string_enum`
-
-You can specify any other parameters for `ORM\Column` as you would usually (nullability, length...).
-
-There is also `integer_enum`, `float_enum` and `boolean_enum` which can be used respectively for their types.
-
-2) `@Enum(class=Sex::class)` - this will be used for reconstructing the `Sex`
- enum object when loading the value back from database
-
-The `class` annotation parameter uses the same namespace resolution process as other Doctrine annotations, so it is practically the same as when you specify a `targetEntity` in associations mapping.
+To use the `Sex` enum in your `User` entity notice the `type="enum<Consistence\Doctrine\Example\User\Sex>"` in `ORM\Column` - this will be used for mapping the value to and from your database. You can specify any other parameters for `ORM\Column` as you would usually (nullability, length...).
 
 ```php
 <?php
 
 namespace Consistence\Doctrine\Example\User;
-
-use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -57,8 +44,7 @@ class User extends \Consistence\ObjectPrototype
 	// ...
 
 	/**
-	 * @Enum(class=Sex::class)
-	 * @ORM\Column(type="string_enum", nullable=true)
+	 * @ORM\Column(type="enum<Consistence\Doctrine\Example\User\Sex>", nullable=true)
 	 * @var \Consistence\Doctrine\Example\User\Sex|null
 	 */
 	private $sex;
@@ -80,6 +66,30 @@ class User extends \Consistence\ObjectPrototype
 
 }
 ```
+
+Before this will work with database, we need to register [Doctrine DBAL type](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#custom-mapping-types) for each enum.
+
+> If you are using Symfony, you can use [`consistence/consistence-doctrine-symfony`](https://github.com/consistence/consistence-doctrine-symfony), where you can just configure which types should be registered.
+
+> If you do this in code, note that this step contains static calls which have global effect. I recommend putting them inside a bootstrap file (usually where you register the Composer autoloader now), which is run or included when the application starts.
+
+```php
+<?php
+
+use Consistence\Doctrine\Enum\Type\StringEnumType;
+use Consistence\Doctrine\Example\User\Sex;
+use Doctrine\DBAL\Types\Type as DoctrineType;
+
+foreach ([
+	StringEnumType::create(StringEnumType::class),
+] as $type) {
+	DoctrineType::getTypeRegistry()->register($type->getName(), $type);
+}
+```
+
+We used `StringEnumType` because the `Sex` enum uses strings for its values. There are also `IntegerEnumType`, `FloatEnumType` and `BooleanEnumType` - depending on what scalar values are used in the enum.
+
+If you use the same enum in multiple places register it only once.
 
 Now everything is ready to be used, when you call `flush`, only `female` will be saved:
 
@@ -134,62 +144,6 @@ Installation
 composer require consistence/consistence-doctrine
 ```
 
-2) Register [Doctrine DBAL types](http://doctrine-orm.readthedocs.org/en/latest/cookbook/custom-mapping-types.html) and [annotations](http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/annotations.html#registering-annotations):
-
-```php
-<?php
-
-use Consistence\Doctrine\Enum\Type\BooleanEnumType;
-use Consistence\Doctrine\Enum\Type\FloatEnumType;
-use Consistence\Doctrine\Enum\Type\IntegerEnumType;
-use Consistence\Doctrine\Enum\Type\StringEnumType;
-
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\DBAL\Types\Type as DoctrineType;
-
-// path to your Composer autoload file
-$loader = require __DIR__ . '/../vendor/autoload.php';
-
-// register loading of custom annotations
-// if you are already using Doctrine annotations you probably won't need this
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-
-// register Doctrine DBAL types
-DoctrineType::addType(BooleanEnumType::NAME, BooleanEnumType::class); // boolean_enum
-DoctrineType::addType(FloatEnumType::NAME, FloatEnumType::class); // float_enum
-DoctrineType::addType(IntegerEnumType::NAME, IntegerEnumType::class); // integer_enum
-DoctrineType::addType(StringEnumType::NAME, StringEnumType::class); // string_enum
-```
-
-This step contains static call which have global effect, so I recommend putting them inside a bootstrap file (usually where you register the Composer autoloader now), which is run or included when the application starts.
-
-If you are already using [Doctrine annotations](http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/annotations.html), the `AnnotationRegistry::registerLoader()` might already be called somewhere in your application, so check that before adding it.
-
-3) [Register postLoad listener](http://doctrine-orm.readthedocs.io/en/latest/reference/events.html#listening-and-subscribing-to-lifecycle-events):
-
-You need to register [`EnumPostLoadEntityListener`](/src/Enum/EnumPostLoadEntityListener.php), which needs `\Doctrine\Common\Annotations\Reader`. If you are using [annotations Doctrine mapping](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html), then you can use the same reader this way:
-
-```php
-<?php
-
-use Consistence\Doctrine\Enum\EnumPostLoadEntityListener;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\ORM\Events;
-
-/** @var \Doctrine\ORM\EntityManager $entityManager */
-/** @var \Doctrine\ORM\Mapping\Driver\AnnotationDriver $annotationDriver */
-$annotationDriver = $entityManager->getConfiguration()->getMetadataDriverImpl();
-$annotationReader = $annotationDriver->getReader();
-
-// make sure to use the most appropriate cache for given environment to get the best performance
-$cache = new ArrayCache();
-
-$entityManager->getEventManager()->addEventListener(
-	Events::postLoad,
-	new EnumPostLoadEntityListener($annotationReader, $cache)
-);
-```
-
-If not, just create a new instance and pass it to the constructor.
+2) Register needed DBAL types (see `Usage` section above).
 
 That's all, you are good to go!
