@@ -5,8 +5,9 @@ declare(strict_types = 1);
 namespace Consistence\Doctrine\Enum\Type;
 
 use Consistence\Enum\Enum;
+use DateTimeImmutable;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\Type as DoctrineType;
+use Doctrine\DBAL\Types\Type as DbalType;
 use Generator;
 use PHPUnit\Framework\Assert;
 
@@ -16,25 +17,58 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @return mixed[][]|\Generator
 	 */
+	public function dbalTypeRegistrationDataProvider(): Generator
+	{
+		yield 'boolean enum' => [
+			'dbalTypeClass' => BooleanEnumType::class,
+			'enumClass' => FooBooleanEnum::class,
+		];
+		yield 'float enum' => [
+			'dbalTypeClass' => FloatEnumType::class,
+			'enumClass' => FooFloatEnum::class,
+		];
+		yield 'integer enum' => [
+			'dbalTypeClass' => IntegerEnumType::class,
+			'enumClass' => FooIntegerEnum::class,
+		];
+		yield 'string enum' => [
+			'dbalTypeClass' => StringEnumType::class,
+			'enumClass' => FooStringEnum::class,
+		];
+	}
+
+	/**
+	 * @return mixed[][]|\Generator
+	 */
 	public function enumDataProvider(): Generator
 	{
+		foreach ($this->dbalTypeRegistrationDataProvider() as $caseData) {
+			$dbalType = $caseData['dbalTypeClass']::create($caseData['enumClass']);
+
+			if (DbalType::getTypeRegistry()->has($dbalType->getName())) {
+				DbalType::getTypeRegistry()->override($dbalType->getName(), $dbalType);
+			} else {
+				DbalType::getTypeRegistry()->register($dbalType->getName(), $dbalType);
+			}
+		}
+
 		yield 'float enum' => [
-			'type' => DoctrineType::getType(FloatEnumType::NAME),
+			'dbalTypeName' => 'enum<Consistence\Doctrine\Enum\Type\FooFloatEnum>',
 			'enum' => FooFloatEnum::get(FooFloatEnum::ONE),
 			'scalarValue' => FooFloatEnum::ONE,
 		];
 		yield 'integer enum' => [
-			'type' => DoctrineType::getType(IntegerEnumType::NAME),
+			'dbalTypeName' => 'enum<Consistence\Doctrine\Enum\Type\FooIntegerEnum>',
 			'enum' => FooIntegerEnum::get(FooIntegerEnum::ONE),
 			'scalarValue' => FooIntegerEnum::ONE,
 		];
 		yield 'string enum' => [
-			'type' => DoctrineType::getType(StringEnumType::NAME),
+			'dbalTypeName' => 'enum<Consistence\Doctrine\Enum\Type\FooStringEnum>',
 			'enum' => FooStringEnum::get(FooStringEnum::ONE),
 			'scalarValue' => FooStringEnum::ONE,
 		];
 		yield 'boolean enum' => [
-			'type' => DoctrineType::getType(BooleanEnumType::NAME),
+			'dbalTypeName' => 'enum<Consistence\Doctrine\Enum\Type\FooBooleanEnum>',
 			'enum' => FooBooleanEnum::get(FooBooleanEnum::ENABLED),
 			'scalarValue' => FooBooleanEnum::ENABLED,
 		];
@@ -47,7 +81,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
 				'enum' => $caseData['enum'],
 				'expectedValue' => $caseData['scalarValue'],
 			];
@@ -57,14 +91,14 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider convertEnumToDatabaseDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 * @param \Consistence\Enum\Enum $enum
 	 * @param mixed $expectedValue
 	 */
-	public function testConvertEnumToDatabase(DoctrineType $type, Enum $enum, $expectedValue): void
+	public function testConvertEnumToDatabase(DbalType $dbalType, Enum $enum, $expectedValue): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertSame($expectedValue, $type->convertToDatabaseValue($enum, $platform));
+		Assert::assertSame($expectedValue, $dbalType->convertToDatabaseValue($enum, $platform));
 	}
 
 	/**
@@ -74,7 +108,7 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
 			];
 		}
 	}
@@ -82,58 +116,186 @@ class EnumTypeIntegrationTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testConvertNullToDatabase(DoctrineType $type): void
+	public function testConvertNullToDatabase(DbalType $dbalType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertNull($type->convertToDatabaseValue(null, $platform));
+		Assert::assertNull($dbalType->convertToDatabaseValue(null, $platform));
 	}
 
 	/**
 	 * @return mixed[][]|\Generator
 	 */
-	public function convertScalarValueToDatabaseDataProvider(): Generator
+	public function convertDatabaseValueToEnumDataProvider(): Generator
 	{
 		foreach ($this->enumDataProvider() as $caseName => $caseData) {
 			yield $caseName => [
-				'type' => $caseData['type'],
-				'scalarValue' => $caseData['scalarValue'],
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
+				'value' => $caseData['scalarValue'],
+				'expectedEnum' => $caseData['enum'],
 			];
 		}
 	}
 
 	/**
-	 * @dataProvider convertScalarValueToDatabaseDataProvider
+	 * @dataProvider convertDatabaseValueToEnumDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
-	 * @param mixed $scalarValue
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
+	 * @param mixed $value
+	 * @param \Consistence\Enum\Enum $expectedEnum
 	 */
-	public function testConvertScalarValueToDatabase(DoctrineType $type, $scalarValue): void
+	public function testConvertDatabaseValueToEnum(DbalType $dbalType, $value, Enum $expectedEnum): void
 	{
-		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertSame($scalarValue, $type->convertToDatabaseValue($scalarValue, $platform));
+		$platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+		Assert::assertSame($expectedEnum, $dbalType->convertToPHPValue($value, $platform));
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testGetName(DoctrineType $type): void
+	public function testConvertNullToPhp(DbalType $dbalType): void
 	{
-		Assert::assertSame($type::NAME, $type->getName());
+		$platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+		Assert::assertNull($dbalType->convertToPHPValue(null, $platform));
+	}
+
+	/**
+	 * @return \Doctrine\DBAL\Types\Type[][]|\Generator
+	 */
+	public function getNameDataProvider(): Generator
+	{
+		foreach ($this->enumDataProvider() as $caseName => $caseData) {
+			yield $caseName => [
+				'dbalType' => DbalType::getType($caseData['dbalTypeName']),
+				'expectedName' => $caseData['dbalTypeName'],
+			];
+		}
+	}
+
+	/**
+	 * @dataProvider getNameDataProvider
+	 *
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
+	 * @param string $expectedName
+	 */
+	public function testGetName(DbalType $dbalType, string $expectedName): void
+	{
+		Assert::assertSame($expectedName, $dbalType->getName());
 	}
 
 	/**
 	 * @dataProvider enumTypeDataProvider
 	 *
-	 * @param \Doctrine\DBAL\Types\Type $type
+	 * @param \Doctrine\DBAL\Types\Type $dbalType
 	 */
-	public function testRequiresSqlCommentHint(DoctrineType $type): void
+	public function testRequiresSqlCommentHint(DbalType $dbalType): void
 	{
 		$platform = $this->createMock(AbstractPlatform::class);
-		Assert::assertTrue($type->requiresSQLCommentHint($platform));
+		Assert::assertTrue($dbalType->requiresSQLCommentHint($platform));
+	}
+
+	/**
+	 * @return mixed[][]|\Generator
+	 */
+	public function dbalTypeClassDataProvider(): Generator
+	{
+		foreach ($this->dbalTypeRegistrationDataProvider() as $caseName => $caseData) {
+			yield $caseName => [
+				'dbalTypeClass' => $caseData['dbalTypeClass'],
+			];
+		}
+	}
+
+	/**
+	 * @dataProvider dbalTypeClassDataProvider
+	 *
+	 * @param string $dbalTypeClass
+	 */
+	public function testCreateNotFromEnum(
+		string $dbalTypeClass
+	): void
+	{
+		$notEnumClass = DateTimeImmutable::class;
+
+		try {
+			$dbalTypeClass::create($notEnumClass);
+			Assert::fail('Exception expected');
+		} catch (\Consistence\Doctrine\Enum\Type\CannotCreateEnumTypeWithClassWhichIsNotEnumException $e) {
+			Assert::assertSame($notEnumClass, $e->getEnumClass());
+		}
+	}
+
+	/**
+	 * @dataProvider dbalTypeClassDataProvider
+	 *
+	 * @param string $dbalTypeClass
+	 */
+	public function testConvertToDatabaseWithoutEnumClass(
+		string $dbalTypeClass
+	): void
+	{
+		if (DbalType::hasType(__METHOD__)) {
+			DbalType::overrideType(__METHOD__, $dbalTypeClass);
+		} else {
+			DbalType::addType(__METHOD__, $dbalTypeClass);
+		}
+
+		$platform = $this->createMock(AbstractPlatform::class);
+
+		try {
+			DbalType::getType(__METHOD__)->convertToDatabaseValue(null, $platform);
+			Assert::fail('Exception expected');
+		} catch (\Consistence\Doctrine\Enum\Type\CannotUseEnumTypeWithoutEnumClassException $e) {
+			Assert::assertSame($dbalTypeClass, $e->getDbalTypeClass());
+		}
+	}
+
+	/**
+	 * @dataProvider dbalTypeClassDataProvider
+	 *
+	 * @param string $dbalTypeClass
+	 */
+	public function testConvertToEnumWithoutEnumClass(
+		string $dbalTypeClass
+	): void
+	{
+		if (DbalType::hasType(__METHOD__)) {
+			DbalType::overrideType(__METHOD__, $dbalTypeClass);
+		} else {
+			DbalType::addType(__METHOD__, $dbalTypeClass);
+		}
+
+		$platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+
+		try {
+			DbalType::getType(__METHOD__)->convertToPHPValue(null, $platform);
+			Assert::fail('Exception expected');
+		} catch (\Consistence\Doctrine\Enum\Type\CannotUseEnumTypeWithoutEnumClassException $e) {
+			Assert::assertSame($dbalTypeClass, $e->getDbalTypeClass());
+		}
+	}
+
+	/**
+	 * @dataProvider dbalTypeRegistrationDataProvider
+	 *
+	 * @param string $dbalTypeClass
+	 * @param string $enumClass
+	 */
+	public function testNormalizeNameToFormWithoutLeadingBackslash(
+		string $dbalTypeClass,
+		string $enumClass
+	): void
+	{
+		$dbalTypeCreatedWithoutLeadingBackslash = $dbalTypeClass::create($enumClass);
+		$dbalTypeCreatedWithLeadingBackslash = $dbalTypeClass::create('\\' . $enumClass);
+
+		Assert::assertSame(
+			$dbalTypeCreatedWithLeadingBackslash->getName(),
+			$dbalTypeCreatedWithoutLeadingBackslash->getName()
+		);
 	}
 
 }
